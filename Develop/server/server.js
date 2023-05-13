@@ -59,11 +59,17 @@ const server = new ApolloServer({
   },
 });
 
-server.applyMiddleware({ app });
+async function startServer() {
+  await server.start();
 
-db.once("open", () => {
-  app.listen(PORT, () => {
-    console.log(`API server running on port ${PORT}!`);
-    console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
+  server.applyMiddleware({ app });
+
+  db.once("open", () => {
+    app.listen(PORT, () => {
+      console.log(`API server running on port ${PORT}!`);
+      console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
+    });
   });
-});
+}
+
+startServer();
